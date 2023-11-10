@@ -10,6 +10,8 @@ public class EventPlanner {
     }
 
     public void startPlanner() {
-        inputView.showGuide();
+        Order order = inputView.takeOrder();
+        System.out.println(order.getDateOfVisit() + "일 방문 예정");
+        System.out.println("주문한 메뉴 : " + order.getOrderMenu());
     }
 }
