@@ -9,12 +9,8 @@ import org.junit.jupiter.api.Test;
 
 class InputViewTest extends NsTest {
     @Test
-    void 날짜_예외_테스트_1보다_작은_수를_입력했을_때() {
+    void 날짜_예외_테스트_범위_밖의_수를_입력했을_때() {
         날짜_예외_테스트("-1");
-    }
-
-    @Test
-    void 날짜_예외_테스트_31보다_큰_수를_입력했을_때() {
         날짜_예외_테스트("32");
     }
 
@@ -23,10 +19,34 @@ class InputViewTest extends NsTest {
         날짜_예외_테스트("1일");
     }
 
+    @Test
+    void 주문_예외_테스트_한개_주문() {
+        주문_예외_테스트("파스타 1개");
+        주문_예외_테스트("1콜라-2");
+        주문_예외_테스트("치킨-하나");
+        주문_예외_테스트("-5");
+        주문_예외_테스트("햄버거-");
+        주문_예외_테스트("1-5");
+    }
+
+    @Test
+    void 주문_예외_테스트_여러개_주문() {
+        주문_예외_테스트("해산물파스타-1,");
+        주문_예외_테스트("토마토파스타-1, 띄어쓰기하면안돼-3");
+        주문_예외_테스트("첫번째메뉴가-이상함,피자-2");
+    }
+
     void 날짜_예외_테스트(String date) {
         assertSimpleTest(() -> {
             runException(date);
             assertThat(output()).contains("[ERROR] 유효하지 않은 날짜입니다. 다시 입력해 주세요.");
+        });
+    }
+
+    void 주문_예외_테스트(String order) {
+        assertSimpleTest(() -> {
+            runException("1", order);
+            assertThat(output()).contains("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
         });
     }
 

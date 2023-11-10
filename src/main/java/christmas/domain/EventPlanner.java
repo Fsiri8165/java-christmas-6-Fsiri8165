@@ -1,6 +1,7 @@
 package christmas.domain;
 
 import christmas.view.InputView;
+import java.util.Arrays;
 
 public class EventPlanner {
     private final InputView inputView;
@@ -12,6 +13,8 @@ public class EventPlanner {
     public void startPlanner() {
         Order order = inputView.takeOrder();
         System.out.println(order.getDateOfVisit() + "일 방문 예정");
-        System.out.println("주문한 메뉴 : " + order.getOrderMenu());
+        for (String[] menu : order.getOrderMenu()) {
+            System.out.println(Arrays.toString(menu));
+        }
     }
 }

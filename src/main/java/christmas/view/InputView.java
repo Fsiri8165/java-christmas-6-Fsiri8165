@@ -35,10 +35,8 @@ public class InputView {
         }
     }
 
-    public void askMenu() {
-        System.out.println("주문하실 메뉴를 메뉴와 개수를 알려 주세요. (e.g. 해산물파스타-2,레드와인-1,초코케이크-1)");
-        String orderMenu = getInput();
-        order.setOrderMenu(orderMenu);
+    public void exceptionHandling(String errBy) {
+        System.out.println("[ERROR] 유효하지 않은 " + errBy + "입니다. 다시 입력해 주세요.");
     }
 
     public void dateInMonthValidate(int dateOfVisit) {
@@ -47,7 +45,38 @@ public class InputView {
         }
     }
 
-    public void exceptionHandling(String errBy) {
-        System.out.println("[ERROR] 유효하지 않은 " + errBy + "입니다. 다시 입력해 주세요.");
+    public void askMenu() {
+        System.out.println("주문하실 메뉴를 메뉴와 개수를 알려 주세요. (e.g. 해산물파스타-2,레드와인-1,초코케이크-1)");
+        String inputOrder = getInput();
+        menuCount(inputOrder);
+    }
+
+    public void menuCount(String inputOrder) {
+        try {
+            orderPatternValidate(inputOrder);
+            String[] orderMenu = inputOrder.split(",");
+            String[][] orderHistory = menuCount(orderMenu);
+            order.setOrderMenu(orderHistory);
+        } catch (Exception e) {
+            exceptionHandling("주문");
+            askMenu();
+        }
+    }
+
+    public void orderPatternValidate(String orderMenu) {
+        String pattern = "^[가-힣]+-\\d+(,[가-힣]+-\\d+)*$";
+        if (!orderMenu.matches(pattern)) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public String[][] menuCount(String[] orderMenu) {
+        String[][] orderHistory = new String[orderMenu.length][2];
+        for (int i = 0; i < orderMenu.length; i++) {
+            String[] history = orderMenu[i].split("-");
+            orderHistory[i][0] = history[0];
+            orderHistory[i][1] = history[1];
+        }
+        return orderHistory;
     }
 }
