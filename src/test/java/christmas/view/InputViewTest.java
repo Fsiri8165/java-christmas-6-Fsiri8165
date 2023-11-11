@@ -42,6 +42,11 @@ class InputViewTest extends NsTest {
         주문_예외_테스트("해산물리조또-5");
     }
 
+    @Test
+    void 주문_예외_테스트_음료만_주문() {
+        주문_예외_테스트("제로콜라-3,레드와인-1,샴페인-2");
+    }
+
     void 날짜_예외_테스트(String date) {
         assertSimpleTest(() -> {
             runException(date);

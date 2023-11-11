@@ -3,7 +3,6 @@ package christmas.view;
 import camp.nextstep.edu.missionutils.Console;
 import christmas.domain.Menu;
 import christmas.domain.Order;
-import java.util.Arrays;
 
 public class InputView {
 
@@ -51,13 +50,13 @@ public class InputView {
     public void askMenu() {
         System.out.println("주문하실 메뉴를 메뉴와 개수를 알려 주세요. (e.g. 해산물파스타-2,레드와인-1,초코케이크-1)");
         String inputOrder = getInput();
-        menuCount(inputOrder);
+        makeOrderHistory(inputOrder);
     }
 
-    public void menuCount(String inputOrder) {
+    public void makeOrderHistory(String inputOrder) {
         try {
             String[] orderMenu = orderPatternValidate(inputOrder);
-            menuCount(orderMenu);
+            makeOrderHistory(orderMenu);
             order.setOrderMenu(orderHistory);
         } catch (Exception e) {
             exceptionHandling("주문");
@@ -65,7 +64,7 @@ public class InputView {
         }
     }
 
-    public void menuCount(String[] orderMenus) {
+    public void makeOrderHistory(String[] orderMenus) {
         String[][] order = new String[orderMenus.length][2];
         for (int i = 0; i < orderMenus.length; i++) {
             String[] history = menuValidate(i, orderMenus);
@@ -73,20 +72,19 @@ public class InputView {
             order[i][1] = history[1];
         }
         orderHistory = order;
+        isOnlyBeverageValidate();
     }
 
-    public String[] menuValidate(int i, String[] orderMenus) {
-        String[] orderMenu = orderMenus[i].split("-");
-        isNotInMenu(orderMenu[0]);
-        return orderMenu;
-    }
-
-    public void isNotInMenu(String orderMenu) {
-        for (Menu m : Menu.values()) {
-            String menu = m.getName();
-            if (menu.equals(orderMenu)) return;
+    public void isOnlyBeverageValidate() {
+        int beverageCount = 0;
+        for (String[] order : orderHistory) {
+            Menu menu = isNotInMenu(order[0]);
+            String menuCategory = menu.getCategory();
+            if (menuCategory.equals("음료")) {
+                beverageCount++;
+            }
         }
-        throw new IllegalArgumentException();
+        if (orderHistory.length == beverageCount) throw new IllegalArgumentException();
     }
 
     public String[] orderPatternValidate(String inputOrder) {
@@ -95,6 +93,20 @@ public class InputView {
             throw new IllegalArgumentException();
         }
         return inputOrder.split(",");
+    }
+
+    public String[] menuValidate(int i, String[] orderMenus) {
+        String[] orderMenu = orderMenus[i].split("-");
+        isNotInMenu(orderMenu[0]);
+        return orderMenu;
+    }
+
+    public Menu isNotInMenu(String orderMenu) {
+        for (Menu m : Menu.values()) {
+            String menu = m.getName();
+            if (menu.equals(orderMenu)) return m;
+        }
+        throw new IllegalArgumentException();
     }
 
 }
