@@ -52,6 +52,12 @@ class InputViewTest extends NsTest {
         주문_예외_테스트("해산물파스타-10,레드와인-11");
     }
 
+    @Test
+    void 주문_예외_테스트_중복된_메뉴를_여러번_주문했을_경우() {
+        주문_예외_테스트("해산물파스타-1,해산물파스타-3");
+        주문_예외_테스트("샴페인-3,양송이수프-1,샴페인-1");
+    }
+
     void 날짜_예외_테스트(String date) {
         assertSimpleTest(() -> {
             runException(date);

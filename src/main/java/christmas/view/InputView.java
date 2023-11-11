@@ -3,6 +3,7 @@ package christmas.view;
 import camp.nextstep.edu.missionutils.Console;
 import christmas.domain.Menu;
 import christmas.domain.Order;
+import java.util.Arrays;
 
 public class InputView {
 
@@ -58,36 +59,35 @@ public class InputView {
             String[] orderMenu = orderPatternValidate(inputOrder);
             menuCount(orderMenu);
             order.setOrderMenu(orderHistory);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             exceptionHandling("주문");
             askMenu();
         }
     }
 
     public void menuCount(String[] orderMenus) {
-        String[][] order = new String[orderMenus.length][2];
+        String[][] orders = new String[orderMenus.length][2];
         for (int i = 0; i < orderMenus.length; i++) {
-            String[] history = menuValidate(i, orderMenus);
-            order[i][0] = history[0];
-            order[i][1] = history[1];
+            String[] history = menuValidate(i, orderMenus, orders);
+            orders[i][0] = history[0];
+            orders[i][1] = history[1];
         }
-        isOnlyBeverageValidate(order);
-        menuSizeValidate(order);
-        orderHistory = order;
+        isOnlyBeverageValidate(orders);
+        menuSizeValidate(orders);
+        orderHistory = orders;
     }
 
-    public String[] menuValidate(int i, String[] orderMenus) {
+    public String[] menuValidate(int i, String[] orderMenus, String[][] orders) {
         String[] orderMenu = orderMenus[i].split("-");
         isNotInMenu(orderMenu[0]);
+        isDuplicateMenu(orderMenu[0], orders, i);
         return orderMenu;
     }
 
-    public void menuSizeValidate(String[][] order) {
-        int menuCount = 0;
-        for (String[] menu : order) {
-            menuCount += Integer.parseInt(menu[1]);
+    public void isDuplicateMenu(String orderMenu, String[][] orders, int i) {
+        for (int j = 0; j < i; j++) {
+            if (orders[j][0].equals(orderMenu)) throw new IllegalArgumentException();
         }
-        if (menuCount > 20) throw new IllegalArgumentException();
     }
 
     public String[] orderPatternValidate(String inputOrder) {
@@ -120,6 +120,14 @@ public class InputView {
         if (orders.length == beverageCount) {
             throw new IllegalArgumentException();
         }
+    }
+
+    public void menuSizeValidate(String[][] order) {
+        int menuCount = 0;
+        for (String[] menu : order) {
+            menuCount += Integer.parseInt(menu[1]);
+        }
+        if (menuCount > 20) throw new IllegalArgumentException();
     }
 
 }
