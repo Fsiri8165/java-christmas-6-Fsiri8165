@@ -56,7 +56,7 @@ public class InputView {
     public void makeOrderHistory(String inputOrder) {
         try {
             String[] orderMenu = orderPatternValidate(inputOrder);
-            makeOrderHistory(orderMenu);
+            menuCount(orderMenu);
             order.setOrderMenu(orderHistory);
         } catch (Exception e) {
             exceptionHandling("주문");
@@ -64,27 +64,15 @@ public class InputView {
         }
     }
 
-    public void makeOrderHistory(String[] orderMenus) {
+    public void menuCount(String[] orderMenus) {
         String[][] order = new String[orderMenus.length][2];
         for (int i = 0; i < orderMenus.length; i++) {
             String[] history = menuValidate(i, orderMenus);
             order[i][0] = history[0];
             order[i][1] = history[1];
         }
+        isOnlyBeverageValidate(order);
         orderHistory = order;
-        isOnlyBeverageValidate();
-    }
-
-    public void isOnlyBeverageValidate() {
-        int beverageCount = 0;
-        for (String[] order : orderHistory) {
-            Menu menu = isNotInMenu(order[0]);
-            String menuCategory = menu.getCategory();
-            if (menuCategory.equals("음료")) {
-                beverageCount++;
-            }
-        }
-        if (orderHistory.length == beverageCount) throw new IllegalArgumentException();
     }
 
     public String[] orderPatternValidate(String inputOrder) {
@@ -104,9 +92,25 @@ public class InputView {
     public Menu isNotInMenu(String orderMenu) {
         for (Menu m : Menu.values()) {
             String menu = m.getName();
-            if (menu.equals(orderMenu)) return m;
+            if (menu.equals(orderMenu)) {
+                return m;
+            }
         }
         throw new IllegalArgumentException();
+    }
+
+    public void isOnlyBeverageValidate(String[][] orders) {
+        int beverageCount = 0;
+        for (String[] order : orders) {
+            Menu menu = isNotInMenu(order[0]);
+            String menuCategory = menu.getCategory();
+            if (menuCategory.equals("음료")) {
+                beverageCount++;
+            }
+        }
+        if (orders.length == beverageCount) {
+            throw new IllegalArgumentException();
+        }
     }
 
 }
