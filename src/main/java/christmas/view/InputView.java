@@ -72,7 +72,22 @@ public class InputView {
             order[i][1] = history[1];
         }
         isOnlyBeverageValidate(order);
+        menuSizeValidate(order);
         orderHistory = order;
+    }
+
+    public String[] menuValidate(int i, String[] orderMenus) {
+        String[] orderMenu = orderMenus[i].split("-");
+        isNotInMenu(orderMenu[0]);
+        return orderMenu;
+    }
+
+    public void menuSizeValidate(String[][] order) {
+        int menuCount = 0;
+        for (String[] menu : order) {
+            menuCount += Integer.parseInt(menu[1]);
+        }
+        if (menuCount > 20) throw new IllegalArgumentException();
     }
 
     public String[] orderPatternValidate(String inputOrder) {
@@ -81,12 +96,6 @@ public class InputView {
             throw new IllegalArgumentException();
         }
         return inputOrder.split(",");
-    }
-
-    public String[] menuValidate(int i, String[] orderMenus) {
-        String[] orderMenu = orderMenus[i].split("-");
-        isNotInMenu(orderMenu[0]);
-        return orderMenu;
     }
 
     public Menu isNotInMenu(String orderMenu) {
