@@ -36,6 +36,12 @@ class InputViewTest extends NsTest {
         주문_예외_테스트("첫번째메뉴가-이상함,피자-2");
     }
 
+    @Test
+    void 주문_예외_테스트_메뉴에_없는_주문() {
+        주문_예외_테스트("굽네고추바사삭-3");
+        주문_예외_테스트("해산물리조또-5");
+    }
+
     void 날짜_예외_테스트(String date) {
         assertSimpleTest(() -> {
             runException(date);

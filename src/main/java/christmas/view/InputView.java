@@ -1,11 +1,14 @@
 package christmas.view;
 
 import camp.nextstep.edu.missionutils.Console;
+import christmas.domain.Menu;
 import christmas.domain.Order;
+import java.util.Arrays;
 
 public class InputView {
 
     private final Order order;
+    private String[][] orderHistory;
 
     public InputView() {
         order = new Order();
@@ -53,9 +56,8 @@ public class InputView {
 
     public void menuCount(String inputOrder) {
         try {
-            orderPatternValidate(inputOrder);
-            String[] orderMenu = inputOrder.split(",");
-            String[][] orderHistory = menuCount(orderMenu);
+            String[] orderMenu = orderPatternValidate(inputOrder);
+            menuCount(orderMenu);
             order.setOrderMenu(orderHistory);
         } catch (Exception e) {
             exceptionHandling("주문");
@@ -63,20 +65,36 @@ public class InputView {
         }
     }
 
-    public void orderPatternValidate(String orderMenu) {
-        String pattern = "^[가-힣]+-\\d+(,[가-힣]+-\\d+)*$";
-        if (!orderMenu.matches(pattern)) {
-            throw new IllegalArgumentException();
+    public void menuCount(String[] orderMenus) {
+        String[][] order = new String[orderMenus.length][2];
+        for (int i = 0; i < orderMenus.length; i++) {
+            String[] history = menuValidate(i, orderMenus);
+            order[i][0] = history[0];
+            order[i][1] = history[1];
         }
+        orderHistory = order;
     }
 
-    public String[][] menuCount(String[] orderMenu) {
-        String[][] orderHistory = new String[orderMenu.length][2];
-        for (int i = 0; i < orderMenu.length; i++) {
-            String[] history = orderMenu[i].split("-");
-            orderHistory[i][0] = history[0];
-            orderHistory[i][1] = history[1];
-        }
-        return orderHistory;
+    public String[] menuValidate(int i, String[] orderMenus) {
+        String[] orderMenu = orderMenus[i].split("-");
+        isNotInMenu(orderMenu[0]);
+        return orderMenu;
     }
+
+    public void isNotInMenu(String orderMenu) {
+        for (Menu m : Menu.values()) {
+            String menu = m.getName();
+            if (menu.equals(orderMenu)) return;
+        }
+        throw new IllegalArgumentException();
+    }
+
+    public String[] orderPatternValidate(String inputOrder) {
+        String pattern = "^[가-힣]+-\\d+(,[가-힣]+-\\d+)*$";
+        if (!inputOrder.matches(pattern)) {
+            throw new IllegalArgumentException();
+        }
+        return inputOrder.split(",");
+    }
+
 }
