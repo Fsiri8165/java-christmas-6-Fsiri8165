@@ -1,20 +1,21 @@
 package christmas.domain;
 
 import christmas.view.InputView;
-import java.util.Arrays;
+import christmas.view.OutputView;
 
 public class EventPlanner {
     private final InputView inputView;
+    private final OutputView outputView;
 
     public EventPlanner() {
         inputView = new InputView();
+        outputView = new OutputView();
     }
 
     public void startPlanner() {
         Order order = inputView.takeOrder();
-        System.out.println(order.getDateOfVisit() + "일 방문 예정");
-        for (String[] menu : order.getOrderMenu()) {
-            System.out.println(Arrays.toString(menu));
-        }
+        int dateOfVisit = order.getDateOfVisit();
+        String[][] orderHistory = order.getOrderHistory();
+        outputView.showEventBenefits(dateOfVisit, orderHistory);
     }
 }

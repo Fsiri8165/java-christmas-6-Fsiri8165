@@ -3,7 +3,6 @@ package christmas.view;
 import camp.nextstep.edu.missionutils.Console;
 import christmas.domain.Menu;
 import christmas.domain.Order;
-import java.util.Arrays;
 
 public class InputView {
 
@@ -56,16 +55,24 @@ public class InputView {
 
     public void makeOrderHistory(String inputOrder) {
         try {
-            String[] orderMenu = orderPatternValidate(inputOrder);
-            menuCount(orderMenu);
-            order.setOrderMenu(orderHistory);
+            String[] orderMenus = orderPatternValidate(inputOrder);
+            menuAccept(orderMenus);
+            order.setOrderHistory(orderHistory);
         } catch (IllegalArgumentException e) {
             exceptionHandling("주문");
             askMenu();
         }
     }
 
-    public void menuCount(String[] orderMenus) {
+    public String[] orderPatternValidate(String inputOrder) {
+        String pattern = "^[가-힣]+-\\d+(,[가-힣]+-\\d+)*$";
+        if (!inputOrder.matches(pattern)) {
+            throw new IllegalArgumentException();
+        }
+        return inputOrder.split(",");
+    }
+
+    public void menuAccept(String[] orderMenus) {
         String[][] orders = new String[orderMenus.length][2];
         for (int i = 0; i < orderMenus.length; i++) {
             String[] history = menuValidate(i, orderMenus, orders);
@@ -82,20 +89,6 @@ public class InputView {
         isNotInMenu(orderMenu[0]);
         isDuplicateMenu(orderMenu[0], orders, i);
         return orderMenu;
-    }
-
-    public void isDuplicateMenu(String orderMenu, String[][] orders, int i) {
-        for (int j = 0; j < i; j++) {
-            if (orders[j][0].equals(orderMenu)) throw new IllegalArgumentException();
-        }
-    }
-
-    public String[] orderPatternValidate(String inputOrder) {
-        String pattern = "^[가-힣]+-\\d+(,[가-힣]+-\\d+)*$";
-        if (!inputOrder.matches(pattern)) {
-            throw new IllegalArgumentException();
-        }
-        return inputOrder.split(",");
     }
 
     public Menu isNotInMenu(String orderMenu) {
@@ -128,6 +121,12 @@ public class InputView {
             menuCount += Integer.parseInt(menu[1]);
         }
         if (menuCount > 20) throw new IllegalArgumentException();
+    }
+
+    public void isDuplicateMenu(String orderMenu, String[][] orders, int i) {
+        for (int j = 0; j < i; j++) {
+            if (orders[j][0].equals(orderMenu)) throw new IllegalArgumentException();
+        }
     }
 
 }

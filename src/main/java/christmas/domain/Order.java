@@ -2,7 +2,7 @@ package christmas.domain;
 
 public class Order {
     private int dateOfVisit;
-    private String[][] orderMenu;
+    private String[][] orderHistory;
 
     public int getDateOfVisit() {
         return dateOfVisit;
@@ -12,11 +12,11 @@ public class Order {
         this.dateOfVisit = dateOfVisit;
     }
 
-    public String[][] getOrderMenu() {
-        return orderMenu;
+    public String[][] getOrderHistory() {
+        return orderHistory;
     }
 
-    public void setOrderMenu(String[][] orderMenu) {
-        this.orderMenu = orderMenu;
+    public void setOrderHistory(String[][] orderHistory) {
+        this.orderHistory = orderHistory;
     }
 }
