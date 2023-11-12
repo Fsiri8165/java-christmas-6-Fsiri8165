@@ -23,6 +23,18 @@ class OutputViewTest extends NsTest {
         });
     }
 
+    @Test
+    void 할인_전_주문_금액_확인() {
+        String orderHistory = "제로콜라-3,초코케이크-2,티본스테이크-2,해산물파스타-3";
+        assertSimpleTest(() -> {
+            run("5", orderHistory);
+            assertThat(output()).contains(
+                    "<할인 전 총주문 금액>",
+                    "254,000원"
+            );
+        });
+    }
+
     @Override
     protected void runMain() {
         Application.main(new String[]{});
