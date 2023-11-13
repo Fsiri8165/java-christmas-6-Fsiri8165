@@ -34,7 +34,7 @@ class OutputViewTest extends NsTest {
             );
         });
     }
-    
+
     @Test
     void 증정_메뉴_이벤트_120000원이_넘을_때() {
         String orderHistory = "티본스테이크-5,제로콜라-5";
@@ -46,6 +46,7 @@ class OutputViewTest extends NsTest {
             );
         });
     }
+
     @Test
     void 증정_메뉴_이벤트_120000원이_안넘을_때() {
         String orderHistory = "양송이수프-1,제로콜라-1";
@@ -53,6 +54,29 @@ class OutputViewTest extends NsTest {
             run("5", orderHistory);
             assertThat(output()).contains(
                     "<증정 메뉴>",
+                    "없음"
+            );
+        });
+    }
+    @Test
+    void 주문금액이_10000원이_안될_때() {
+        String orderHistory = "타파스-1";
+        assertSimpleTest(() -> {
+            run("5", orderHistory);
+            assertThat(output()).contains(
+                    "<혜택 내역>",
+                    "없음"
+            );
+        });
+    }
+
+    @Test
+    void 크리스마스_디데이_할인_이벤트_기간이_아닐_때() {
+        String orderHistory = "티본스테이크-1";
+        assertSimpleTest(() -> {
+            run("27", orderHistory);
+            assertThat(output()).contains(
+                    "<혜택 내역>",
                     "없음"
             );
         });
