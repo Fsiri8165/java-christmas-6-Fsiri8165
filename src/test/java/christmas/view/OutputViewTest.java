@@ -29,8 +29,31 @@ class OutputViewTest extends NsTest {
         assertSimpleTest(() -> {
             run("5", orderHistory);
             assertThat(output()).contains(
-                    "<할인 전 총주문 금액>",
+                    "<증정 메뉴>",
                     "254,000원"
+            );
+        });
+    }
+    
+    @Test
+    void 증정_메뉴_이벤트_120000원이_넘을_때() {
+        String orderHistory = "티본스테이크-5,제로콜라-5";
+        assertSimpleTest(() -> {
+            run("5", orderHistory);
+            assertThat(output()).contains(
+                    "<증정 메뉴>",
+                    "샴페인 2개"
+            );
+        });
+    }
+    @Test
+    void 증정_메뉴_이벤트_120000원이_안넘을_때() {
+        String orderHistory = "양송이수프-1,제로콜라-1";
+        assertSimpleTest(() -> {
+            run("5", orderHistory);
+            assertThat(output()).contains(
+                    "<증정 메뉴>",
+                    "없음"
             );
         });
     }

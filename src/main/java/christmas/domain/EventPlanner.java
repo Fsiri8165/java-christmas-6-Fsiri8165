@@ -14,8 +14,6 @@ public class EventPlanner {
 
     public void startPlanner() {
         Order order = inputView.takeOrder();
-        int dateOfVisit = order.getDateOfVisit();
-        String[][] orderHistory = order.getOrderHistory();
-        outputView.showEventBenefits(dateOfVisit, orderHistory);
+        outputView.showEventBenefits(order);
     }
 }
