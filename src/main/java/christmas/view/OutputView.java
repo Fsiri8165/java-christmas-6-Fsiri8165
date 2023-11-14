@@ -2,7 +2,6 @@ package christmas.view;
 
 import christmas.domain.EventManager;
 import christmas.domain.Order;
-import java.util.List;
 
 public class OutputView {
 
@@ -21,7 +20,10 @@ public class OutputView {
         System.out.println("12월" + dateOfVisit + "일에 우테코 식당에서 받을 이벤트 혜택 미리 보기!");
         showOrderHistory();
         showBonusMenu();
-        showBenefitsDetails();
+        if (isEventTarget()) {
+            showEventDetails(dateOfVisit);
+            System.out.println();
+        }
     }
 
     public void showOrderHistory() {
@@ -52,52 +54,44 @@ public class OutputView {
         System.out.println();
     }
 
-    public void showBenefitsDetails() {
+    public boolean isEventTarget() {
         System.out.println("<혜택 내역>");
-        int dateOfVisit = order.getDateOfVisit();
         if (!order.getEventTarget()) {
             System.out.println("없음");
+            return false;
         }
-        int ddaySale = showChristmasDdaySale(dateOfVisit);
-        int dateSale = showDateSale(dateOfVisit);
-        int specialSale = showSpecialSale(dateOfVisit);
-        int bonusPrice = showBonusPrice();
-        System.out.println();
+        return true;
+
     }
 
-    public int showChristmasDdaySale(int dateOfVisit) {
-        if (dateOfVisit > 25) {
-            return 0;
-        }
-        int ddaySale = 900 + (dateOfVisit * 100);
+    public void showEventDetails(int dateOfVisit) {
+        int[] sales = eventManager.sales(dateOfVisit);
+        showChristmasDdaySale(sales[0]);
+        showDateSale(sales[1]);
+        showSpecialSale(sales[2]);
+        showBonusPrice(sales[3]);
+    }
+
+    public void showChristmasDdaySale(int ddaySale) {
         String ddaySaleFormat = eventManager.priceFormat(ddaySale);
         System.out.printf("크리스마스 디데이 할인: -%s\n", ddaySaleFormat);
-        return ddaySale;
     }
 
-    public int showDateSale(int dateOfVisit) {
+    public void showDateSale(int salePrice) {
+        int dateOfVisit = order.getDateOfVisit();
         String checkWeekend = eventManager.checkWeekend(dateOfVisit);
-        int salePrice = eventManager.getDateSalePrice(checkWeekend);
-        if (salePrice == 0) {
-            return 0;
-        }
         String salepriceFormat = eventManager.priceFormat(salePrice);
         System.out.printf("%s 할인: -%s\n", checkWeekend, salepriceFormat);
-        return salePrice;
     }
 
-    public int showSpecialSale(int dateOfVisit) {
-        List<Integer> specialDays = List.of(3, 10, 17, 24, 25, 31);
-        if (specialDays.contains(dateOfVisit)) {
+    public void showSpecialSale(int specialSalePrice) {
+        if (specialSalePrice == 1000) {
             System.out.println("특별 할인: -1,000원");
-            return 1000;
         }
-        return 0;
     }
 
-    public int showBonusPrice() {
-        int bonusPrice = eventManager.getBonusMenu() * 25000;
-        System.out.printf("증정 이벤트: -%s\n", eventManager.priceFormat(bonusPrice));
-        return bonusPrice;
+    public void showBonusPrice(int bonusPrice) {
+        String bonusPriceFormat = eventManager.priceFormat(bonusPrice);
+        System.out.printf("증정 이벤트: -%s\n", bonusPriceFormat);
     }
 }

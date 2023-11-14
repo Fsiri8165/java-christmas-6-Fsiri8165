@@ -72,9 +72,9 @@ class OutputViewTest extends NsTest {
 
     @Test
     void 크리스마스_디데이_할인_이벤트_기간이_아닐_때() {
-        String orderHistory = "티본스테이크-1";
+        String orderHistory = "27";
         assertSimpleTest(() -> {
-            run("27", orderHistory);
+            run(orderHistory, "티본스테이크-1");
             assertThat(output()).contains(
                     "<혜택 내역>",
                     "없음"
@@ -84,9 +84,9 @@ class OutputViewTest extends NsTest {
     
     @Test
     void 요일_할인_주말인_경우() {
-        String orderHistory = "티본스테이크-1,바비큐립-1,해산물파스타-1,크리스마스파스타-1";
+        String dateOfVisit = "3";
         assertSimpleTest(() -> {
-            run("3", orderHistory);
+            run(dateOfVisit, "티본스테이크-1,바비큐립-1,해산물파스타-1,크리스마스파스타-1");
             assertThat(output()).contains(
                     "<혜택 내역>",
                     "주말 할인: -8,092원"
@@ -96,12 +96,36 @@ class OutputViewTest extends NsTest {
 
     @Test
     void 요일_할인_평일인_경우() {
-        String orderHistory = "초코케이크-1,아이스크림-2,티본스테이크-3";
+        String dateOfVisit = "4";
         assertSimpleTest(() -> {
-            run("4", orderHistory);
+            run(dateOfVisit, "초코케이크-1,아이스크림-2,티본스테이크-3");
             assertThat(output()).contains(
                     "<혜택 내역>",
                     "평일 할인: -4,046원"
+            );
+        });
+    }
+
+    @Test
+    void 특별_할인_테스트() {
+        String dateOfVisit = "17";
+        assertSimpleTest(() -> {
+            run(dateOfVisit, "초코케이크-1,아이스크림-2,티본스테이크-3");
+            assertThat(output()).contains(
+                    "<혜택 내역>",
+                    "특별 할인: -1,000원"
+            );
+        });
+    }
+
+    @Test
+    void 증정_이벤트_가격_확인() {
+        String dateOfVisit = "17";
+        assertSimpleTest(() -> {
+            run(dateOfVisit, "초코케이크-1,아이스크림-2,티본스테이크-3");
+            assertThat(output()).contains(
+                    "<혜택 내역>",
+                    "증정 이벤트: -25,000원"
             );
         });
     }

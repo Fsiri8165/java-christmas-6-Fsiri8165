@@ -2,6 +2,7 @@ package christmas.domain;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.List;
 
 public class EventManager {
 
@@ -100,5 +101,42 @@ public class EventManager {
             }
         }
         return 0;
+    }
+
+    public int[] sales(int dateOfVisit) {
+        int[] sales = new int[4];
+        sales[0] = getChristmasDdaySale(dateOfVisit);
+        sales[1] = getDateSale(dateOfVisit);
+        sales[2] = getSpecialSale(dateOfVisit);
+        sales[3] = getBonusPrice();
+        return sales;
+    }
+
+    public int getChristmasDdaySale(int dateOfVisit) {
+        if (dateOfVisit > 25) {
+            return 0;
+        }
+        return 900 + (dateOfVisit * 100);
+    }
+
+    public int getDateSale(int dateOfVisit) {
+        String checkWeekend = checkWeekend(dateOfVisit);
+        int salePrice = getDateSalePrice(checkWeekend);
+        if (salePrice == 0) {
+            return 0;
+        }
+        return salePrice;
+    }
+
+    public int getSpecialSale(int dateOfVisit) {
+        List<Integer> specialDays = List.of(3, 10, 17, 24, 25, 31);
+        if (specialDays.contains(dateOfVisit)) {
+            return 1000;
+        }
+        return 0;
+    }
+
+    public int getBonusPrice() {
+        return getBonusMenu() * 25000;
     }
 }
