@@ -120,12 +120,16 @@ public class InputView {
         for (String[] menu : order) {
             menuCount += Integer.parseInt(menu[1]);
         }
-        if (menuCount > 20) throw new IllegalArgumentException();
+        if (menuCount > 20) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public void isDuplicateMenu(String orderMenu, String[][] orders, int i) {
         for (int j = 0; j < i; j++) {
-            if (orders[j][0].equals(orderMenu)) throw new IllegalArgumentException();
+            if (orders[j][0].equals(orderMenu)) {
+                throw new IllegalArgumentException();
+            }
         }
     }
 

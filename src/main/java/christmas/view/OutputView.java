@@ -1,7 +1,6 @@
 package christmas.view;
 
 import christmas.domain.EventManager;
-import christmas.domain.Menu;
 import christmas.domain.Order;
 
 public class OutputView {
@@ -24,26 +23,6 @@ public class OutputView {
         showBenefitsDetails();
     }
 
-    public void showBenefitsDetails() {
-        System.out.println("<혜택 내역>");
-        if (!order.getEventTarget() || !showChristmasDdaySale(order.getDateOfVisit())) {
-            System.out.println("없음");
-            System.out.println();
-        }
-    }
-    
-    public void showBonusMenu() {
-        System.out.println();
-        System.out.println("<증정 메뉴>");
-        int bonusCount = eventManager.getBonusMenu();
-        if (bonusCount != 0) {
-            System.out.printf("샴페인 %d개\n\n", bonusCount);
-            return;
-        }
-        System.out.println("없음");
-        System.out.println();
-    }
-
     public void showOrderHistory() {
         System.out.println();
         System.out.println("<주문 메뉴>");
@@ -56,20 +35,50 @@ public class OutputView {
 
     public void showTotalPrice() {
         System.out.println("<할인 전 총주문 금액>");
-        int totalPrice = 0;
-        for (String[] orders : orderHistory) {
-            totalPrice += eventManager.getMenuPrice(orders);
+        String totalPrice = eventManager.getTotalPrice(orderHistory, order);
+        System.out.println(totalPrice);
+    }
+
+    public void showBonusMenu() {
+        System.out.println();
+        System.out.println("<증정 메뉴>");
+        int bonusCount = eventManager.getBonusMenu();
+        if (bonusCount != 0) {
+            System.out.printf("샴페인 %d개\n\n", bonusCount);
+            return;
         }
-        order.setTotalPrice(totalPrice);
-        String totalPriceFormat = eventManager.priceFormat(totalPrice);
-        System.out.println(totalPriceFormat);
-        eventManager.isEventTargetValidate(totalPrice, order);
+        System.out.println("없음");
+        System.out.println();
+    }
+
+    public void showBenefitsDetails() {
+        System.out.println("<혜택 내역>");
+        int dateOfVisit = order.getDateOfVisit();
+        if (!order.getEventTarget() || !(showChristmasDdaySale(dateOfVisit)
+                && showDateSale(dateOfVisit))) {
+            System.out.println("없음");
+            System.out.println();
+        }
     }
 
     public boolean showChristmasDdaySale(int dateOfVisit) {
-        if (dateOfVisit > 25) return false;
-        int sale = 900 + (dateOfVisit * 100);
-        System.out.printf("크리스마스 디데이 할인: -%s\n", eventManager.priceFormat(sale));
+        if (dateOfVisit > 25) {
+            return false;
+        }
+        int ddaySale = 900 + (dateOfVisit * 100);
+        String ddaySaleFormat = eventManager.priceFormat(ddaySale);
+        System.out.printf("크리스마스 디데이 할인: -%s\n", ddaySaleFormat);
+        return true;
+    }
+
+    public boolean showDateSale(int dateOfVisit) {
+        String checkWeekend = eventManager.checkWeekend(dateOfVisit);
+        int salePrice = eventManager.getDateSalePrice(checkWeekend);
+        if (salePrice == 0) {
+            return false;
+        }
+        String salepriceFormat = eventManager.priceFormat(salePrice);
+        System.out.printf("%s 할인: -%s", checkWeekend, salepriceFormat);
         return true;
     }
 }

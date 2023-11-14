@@ -2,7 +2,6 @@ package christmas.view;
 
 import static camp.nextstep.edu.missionutils.test.Assertions.assertSimpleTest;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import camp.nextstep.edu.missionutils.test.NsTest;
 import christmas.Application;
@@ -29,7 +28,7 @@ class OutputViewTest extends NsTest {
         assertSimpleTest(() -> {
             run("5", orderHistory);
             assertThat(output()).contains(
-                    "<증정 메뉴>",
+                    "<할인 전 총주문 금액>",
                     "254,000원"
             );
         });
@@ -58,6 +57,7 @@ class OutputViewTest extends NsTest {
             );
         });
     }
+
     @Test
     void 주문금액이_10000원이_안될_때() {
         String orderHistory = "타파스-1";
@@ -78,6 +78,30 @@ class OutputViewTest extends NsTest {
             assertThat(output()).contains(
                     "<혜택 내역>",
                     "없음"
+            );
+        });
+    }
+    
+    @Test
+    void 요일_할인_주말인_경우() {
+        String orderHistory = "티본스테이크-1,바비큐립-1,해산물파스타-1,크리스마스파스타-1";
+        assertSimpleTest(() -> {
+            run("3", orderHistory);
+            assertThat(output()).contains(
+                    "<혜택 내역>",
+                    "주말 할인: -8,092원"
+            );
+        });
+    }
+
+    @Test
+    void 요일_할인_평일인_경우() {
+        String orderHistory = "초코케이크-1,아이스크림-2,티본스테이크-3";
+        assertSimpleTest(() -> {
+            run("4", orderHistory);
+            assertThat(output()).contains(
+                    "<혜택 내역>",
+                    "평일 할인: -4,046원"
             );
         });
     }
