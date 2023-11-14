@@ -139,4 +139,30 @@ public class EventManager {
     public int getBonusPrice() {
         return getBonusMenu() * 25000;
     }
+
+    public int getEventTotalPrice(int[] sales) {
+        int eventTotalPrice = 0;
+        for (int sale : sales) {
+            eventTotalPrice += sale;
+        }
+        return eventTotalPrice;
+    }
+
+    public int getPriceAfterEvent(int eventTotalPrice, int specialPrice) {
+        int totalEventPrice = eventTotalPrice - specialPrice;
+        return totalPrice - totalEventPrice;
+    }
+
+    public String getEventBedge(int eventTotalPrice) {
+        if (eventTotalPrice > 25000) {
+            return "산타";
+        }
+        if (eventTotalPrice > 10000) {
+            return "트리";
+        }
+        if (eventTotalPrice > 5000) {
+            return "별";
+        }
+        return "없음";
+    }
 }

@@ -21,8 +21,11 @@ public class OutputView {
         showOrderHistory();
         showBonusMenu();
         if (isEventTarget()) {
-            showEventDetails(dateOfVisit);
-            System.out.println();
+            int[] sales = eventManager.sales(dateOfVisit);
+            showEventDetails(sales);
+            int eventTotalPrice = eventManager.getEventTotalPrice(sales);
+            showTotalEventPrice(eventTotalPrice);
+            showPriceAfterEvent(eventTotalPrice, sales[3]);
         }
     }
 
@@ -64,12 +67,12 @@ public class OutputView {
 
     }
 
-    public void showEventDetails(int dateOfVisit) {
-        int[] sales = eventManager.sales(dateOfVisit);
+    public void showEventDetails(int[] sales) {
         showChristmasDdaySale(sales[0]);
         showDateSale(sales[1]);
         showSpecialSale(sales[2]);
         showBonusPrice(sales[3]);
+        System.out.println();
     }
 
     public void showChristmasDdaySale(int ddaySale) {
@@ -93,5 +96,25 @@ public class OutputView {
     public void showBonusPrice(int bonusPrice) {
         String bonusPriceFormat = eventManager.priceFormat(bonusPrice);
         System.out.printf("증정 이벤트: -%s\n", bonusPriceFormat);
+    }
+
+    public void showTotalEventPrice(int eventTotalPrice) {
+        System.out.println("<총혜택 금액>");
+        System.out.printf("-%s\n", eventManager.priceFormat(eventTotalPrice));
+        System.out.println();
+    }
+
+    public void showPriceAfterEvent(int eventTotalPrice, int specialPrice) {
+        System.out.println("<할인 후 예상 결제 금액>");
+        int priceAfterEvent = eventManager.getPriceAfterEvent(eventTotalPrice, specialPrice);
+        System.out.println(eventManager.priceFormat(priceAfterEvent));
+        System.out.println();
+        showEventBedge(eventTotalPrice);
+    }
+    
+    public void showEventBedge(int eventTotalPrice) {
+        System.out.println("<12월 이벤트 배지>");
+        System.out.println(eventManager.getEventBedge(eventTotalPrice));
+
     }
 }

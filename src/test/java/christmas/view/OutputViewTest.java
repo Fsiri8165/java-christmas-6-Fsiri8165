@@ -130,6 +130,44 @@ class OutputViewTest extends NsTest {
         });
     }
 
+    @Test
+    void 총혜택_금액_확인() {
+        String dateOfVisit = "16";
+        assertSimpleTest(() -> {
+            run(dateOfVisit, "티본스테이크-1,양송이수프-1,아이스크림-2,제로콜라-1,바비큐립-1");
+            assertThat(output()).contains(
+                    "<총혜택 금액>",
+                    "31,546원"
+            );
+        });
+    }
+
+    @Test
+    void 할인_후_금액_확인() {
+        String dateOfVisit = "16";
+        String orderHistory = "크리스마스파스타-3,초코케이크-2,레드와인-1,시저샐러드-2,아이스크림-1";
+        assertSimpleTest(() -> {
+            run(dateOfVisit, orderHistory);
+            assertThat(output()).contains(
+                    "<할인 후 예상 결제 금액>",
+                    "181,477원"
+            );
+        });
+    }
+
+    @Test
+    void 이벤트_배지_확인() {
+        String dateOfVisit = "15";
+        String orderHistory = "해산물파스타-1,초코케이크-1,티본스테이크-1,아이스크림-2,타파스-1,레드와인-1";
+        assertSimpleTest(() -> {
+            run(dateOfVisit, orderHistory);
+            assertThat(output()).contains(
+                    "<12월 이벤트 배지>",
+                    "산타"
+            );
+        });
+    }
+    
     @Override
     protected void runMain() {
         Application.main(new String[]{});
